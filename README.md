@@ -1,6 +1,6 @@
 # searchbox-app
 A simple search engine to search medium stories built with streamlit and elasticsearch. 
-The demo of this app is available on [Heroku](https://search-box-app.herokuapp.com/).
+The demo of this app is available on [<!-- docs -->](https://search-box-app.docsapp.com/).
 
 ## Prepare Environments
 The codes were tested and ran on Ubuntu 18.04 using python 3.7. 
