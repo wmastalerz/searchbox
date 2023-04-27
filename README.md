@@ -1,6 +1,6 @@
-# medium-search-app
+# searchbox-app
 A simple search engine to search medium stories built with streamlit and elasticsearch. 
-The demo of this app is available on [Heroku](https://medium-search-app.herokuapp.com/).
+The demo of this app is available on [Heroku](https://search-box-app.herokuapp.com/).
 
 ## Prepare Environments
 The codes were tested and ran on Ubuntu 18.04 using python 3.7. 
@@ -14,7 +14,7 @@ source ./create_env
 Since this app depends on the elasticsearch container, it is preferable to use docker compose. 
 Before getting started, let's build the docker container of this app
 ```
-docker build -t medium-search-app .
+docker build -t search-box-app .
 ```
 Then use docker compose:
 ```

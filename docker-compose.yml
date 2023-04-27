@@ -11,7 +11,7 @@ services:
        - esdata:/usr/share/elasticsearch/data
 
   web:
-    image: medium-search-app
+    image: search-box-app
     container_name: search-app
     depends_on:
       - es
