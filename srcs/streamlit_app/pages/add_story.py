@@ -8,16 +8,16 @@ from streamlit_app import utils, templates
 
 
 def app():
-    """ page for adding medium story """
+    """ page for adding document """
     index = os.environ['INDEX']
     domain = os.environ['DOMAIN']
     driver = os.environ['DRIVER']
     es = Elasticsearch(host=domain)
-    st.title('Add Story')
+    st.title('Add docs')
     st.write(templates.info_add_story(), unsafe_allow_html=True)
     with st.expander('By URL'):
         st.write(templates.info_add_url(), unsafe_allow_html=True)
-        url = st.text_input('Enter medium story or list url:')
+        url = st.text_input('Enter page docs or list url:')
         url_type = st.radio('Url type:', ['story', 'list'])
         add_story_url = st.button('Add', 'submit_add_story_url')
 
@@ -39,14 +39,14 @@ def app():
         stories = {}
         # add story by medium story url
         if url_type == 'story':
-            with st.spinner('Getting 1 story content...'):
+            with st.spinner('Getting 1 doc content...'):
                 stories[url] = utils.get_story_from_url(url, driver)
         # add stories by medium list url
         else:
             # get story urls in the given medium list
             story_urls = utils.get_story_urls_from_list(url, driver)
             for i, _url in enumerate(story_urls):
-                with st.spinner(f'Getting {i + 1}/{len(story_urls)} story content...'):
+                with st.spinner(f'Getting {i + 1}/{len(story_urls)} doc content...'):
                     stories[_url] = utils.get_story_from_url(_url, driver)
 
         # index stories into elasticsearch

@@ -42,37 +42,37 @@ def index_search(es, index: str, keywords: str, filters: str, from_i: int,
                  size: int) -> dict:
     """ """
     body = {
-        'query': {
-            'bool': {
-                'must': [
+        "query": {
+            "bool": {
+                "must": [
                     {
-                        'query_string': {
-                            'query': keywords,
-                            'fields': ['content'],
-                            'default_operator': 'AND',
+                        "query_string": {
+                            "query": keywords,
+                            "fields": ["content"],
+                            "default_operator": "AND"
                         }
                     }
-                ],
+                ]
             }
         },
-        'highlight': {
-            'pre_tags': ['<b>'],
-            'post_tags': ['</b>'],
-            'fields': {'content': {}}
+        "highlight": {
+            "pre_tags": ["<b>"],
+            "post_tags": ["</b>"],
+            "fields": {"content": {}}
         },
-        'from': from_i,
-        'size': size,
-        'aggs': {
-            'tags': {
-                'terms': {'field': 'tags'}
+        "from": from_i,
+        "size": size,
+        "aggs": {
+            "tags": {
+                "terms": {"field": "tags"}
             },
-            'match_count': {'value_count': {'field': '_id'}}
+            "match_count": {"value_count": {"field": "_name"}}
         }
     }
     if filters is not None:
-        body['query']['bool']['filter'] = {
-            'terms': {
-                'tags': [filters]
+        body["query"]["bool"]["filter"] = {
+            "terms": {
+                "tags": [filters]
             }
         }
 
@@ -104,7 +104,7 @@ def index_stories(es, index: str, stories: dict):
     st.write(stories)
 
 
-@st.cache(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def shorten_title(title: str, limit: int = 65) -> str:
     """ Shorten the title of a story. """
     if len(title) > limit:
@@ -113,7 +113,7 @@ def shorten_title(title: str, limit: int = 65) -> str:
     return title
 
 
-@st.cache(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def simplify_es_result(result: dict) -> dict:
     """ """
     res = result['_source']
@@ -125,14 +125,14 @@ def simplify_es_result(result: dict) -> dict:
     return res
 
 
-@st.cache(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def get_story_urls_from_list(url: str, chrome: str):
     """ """
     with st.spinner('Getting story urls from list...'):
         return medium.get_story_from_list(url, chrome=chrome)
 
 
-@st.cache(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def get_story_from_url(url: str, chrome: str) -> dict:
     """ """
     retry = 0

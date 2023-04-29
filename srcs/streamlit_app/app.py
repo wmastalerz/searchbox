@@ -7,10 +7,10 @@ sys.path.append('srcs')
 from streamlit_app import utils, templates
 from streamlit_app.pages import add_story, search
 
-INDEX = 'medium_data'
+INDEX = 'docs_data'
 PAGE_SIZE = 5
-DOMAIN = 'es'
-# DOMAIN = '0.0.0.0'
+DOMAIN = os.environ['ESHOME']
+
 PORT = 9200
 DRIVER = '/usr/local/bin/chromedriver'
 # DRIVER = 'chromedriver_linux64/chromedriver'
@@ -48,14 +48,14 @@ def set_session_state():
 
 
 def main():
-    st.set_page_config(page_title='Medium Search Engine')
+    st.set_page_config(page_title='Search Engine')
     set_session_state()
-    layout = st.sidebar.radio('', ['Search', 'Add Story'])
+    layout = st.sidebar.radio('', ['Search', 'Add docs'])
     st.write(templates.load_css(), unsafe_allow_html=True)
     # switch between pages
     if layout == 'Search':
         search.app()
-    elif layout == 'Add Story':
+    elif layout == 'Add docs':
         add_story.app()
 
 
