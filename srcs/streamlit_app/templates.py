@@ -59,7 +59,6 @@ def info_add_url() -> str:
                     could be multiple stories being added into the search 
                     engine depends on how many stories in that medium list. 
                     <span style="color:grey;">
-                    (typically looks like https://medium.com/@USERNAME/list/LISTNAME-HASH)
                     </span>
                 </li>
             </ul>

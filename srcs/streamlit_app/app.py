@@ -10,11 +10,9 @@ from streamlit_app.pages import add_story, search
 INDEX = 'docs_data'
 PAGE_SIZE = 5
 DOMAIN = os.environ['ESHOME']
-
 PORT = 9200
 DRIVER = '/usr/local/bin/chromedriver'
-# DRIVER = 'chromedriver_linux64/chromedriver'
-# docker run --rm -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:7.11.2
+
 es = Elasticsearch(host=DOMAIN)
 utils.check_and_create_index(es, INDEX)
 

@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import time
 import requests
@@ -31,7 +32,7 @@ class Story(object):
             length = None
             i = 1
             while length is None and i < len(paragraphs):
-                # find the paragraph contains the article length
+                
                 if '·' in paragraphs[i].text and paragraphs[i].text.endswith('min read'):
                     length = paragraphs[i].text.split('·')[1]
                 else:
@@ -41,15 +42,15 @@ class Story(object):
                 self.length = length
                 self.author = paragraphs[i - 1].text
                 return i
-            # if cant find length in all p tags
+            
             else:
-                # find the div tag containing title, author and length
+                
                 title_block = article_element.find(lambda tag: '·' in tag.text and \
                                                    tag.text.endswith(' min read'))
                 length = ' '.join(title_block.strings).split('·')[1]
-                # remove redundant whitespace
+                
                 self.length = ' '.join(length.split())
-                # author is in line with the length
+                
                 self.author = list(title_block.strings)[1]
                 return None
 
@@ -59,13 +60,19 @@ class Story(object):
 
     def _get_tags(self, soup):
         """ Get tags of the story. """
+        pattern = r'\b[A-Z][a-z]*\b'
         try:
-            li_element = soup.find_all('li')  # tags are in lists
+            li_element = soup.find_all('li')  
             for li in li_element:
                 a_element = li.find_all('a')
                 for a in a_element:
                     if ('/tagged/' in a['href'] or '/tag/' in a['href']) and '?' not in a['href']:
                         self.tags.append(a['href'].split('/')[-1])
+            if not self.tags:
+                matches = re.findall(pattern, soup)
+                self.tags = matches[:3]
+            if not self.tags:
+                self.tags[0] = 'TBD'   
         except Exception as e:
             print('Problem getting tags:', e)
 
@@ -74,13 +81,13 @@ class Story(object):
         try:
             for p in paragraphs:
                 self.content.append(p.text)
-                # get codes, lists
+                
                 next_tag = p.next_element
                 while next_tag is not None and next_tag.name != 'p':
-                    # find codes
+                    
                     if next_tag.name == 'pre':
                         self.content.append(' '.join(next_tag.stripped_strings))
-                    # find lists
+                    
                     elif next_tag.name == 'ol' or next_tag.name == 'ul':
                         self.content.append(' '.join(next_tag.stripped_strings))
 
@@ -93,11 +100,11 @@ class Story(object):
         Scrape the story to get the title, author name, length, tags
         and content.
         """
-        # start webdriver
+        
         driver = init_driver(chrome, firefox)
-        # load page
+        
         driver.get(self.url)
-        # scroll down to load git gist
+        
         try:
             for p in driver.find_elements_by_xpath('//p'):
                 time.sleep(0.1)
@@ -105,19 +112,19 @@ class Story(object):
         except:
             pass
 
-        # parse page html
+        
         soup = BeautifulSoup(driver.page_source, 'html.parser')
-        # find article
+        
         article_element = soup.find('article')
-        # get all tags
+        
         if len(self.tags) == 0:
             self._get_tags(soup)
 
-        # get title
+        
         if not self.title:
             self._get_title(article_element)
 
-        # get paragraphs
+        
         if article_element is not None:
             paragraphs = article_element.find_all('p')
         else:
@@ -127,20 +134,20 @@ class Story(object):
             print(f'Error getting {self.url}')
             raise requests.exceptions.HTTPError('Blocked by the Medium website.')
 
-        # get author name and length of the article
+        
         length_index = self._get_author_length(article_element, paragraphs)
 
-        # then get only the content paragraphs
+        
         if length_index is not None:
             paragraphs = paragraphs[length_index + 1:]
         elif paragraphs[0].text.startswith('You have 2 free member-only'):
             paragraphs = paragraphs[1:]
 
-        # get content
+        
         if len(self.content) == 0:
             self._get_content(paragraphs)
 
-        # close webdriver
+        
         driver.quit()
 
     def to_dict(self) -> dict:
@@ -155,7 +162,7 @@ class Story(object):
 
     def to_json(self, json_file: str, load_exist: bool = True):
         """ Save the story into json file. """
-        # save to the existing json file
+        
         if load_exist and os.path.isfile(json_file):
             with open(json_file, 'r') as f:
                 loaded = json.load(f)
@@ -170,30 +177,30 @@ class Story(object):
 def get_lists(url: str, chrome: str = None, firefox: str = None) -> List[str]:
     """ Get urls of all public lists of a medium user. """
     driver = init_driver(chrome, firefox)
-    # get username
+    
     username = url.split('/@')[1].split('/')[0]
-    # load page
+    
     driver.get(url)
     trial = 0
-    # wait until the page is fully loaded
+    
     while len(driver.find_elements_by_tag_name('a')) == 0:
         time.sleep(0.1)
         trial += 1
-        if trial == 30:  # avoid infinity loop
+        if trial == 30:  
             error_mssg = 'Maximum trial has been reached.'
             raise requests.exceptions.ConnectionError(error_mssg)
 
     soup = BeautifulSoup(driver.page_source, 'html.parser')
-    # find all hyperlinks
+    
     lists = soup.find_all('a')
     list_urls = []
     for l in lists:
-        # get only the list links
+        
         if f'@{username}/list' in l['href'] and l['href'] not in list_urls:
             list_urls.append(l['href'])
 
     driver.close()
-    # add prefixes to the list links
+    
     list_urls = [l if l.startswith('http') else f'https://medium.com{l}' \
                  for l in list_urls]
     return list_urls
@@ -204,14 +211,14 @@ def get_story_from_list(list_url: str, waiting_time: int = 3,
     """ Get urls of all stories in a public medium list. """
     driver = init_driver(chrome, firefox)
     driver.get(list_url)
-    # get scroll height
+    
     last_height = driver.execute_script("return document.body.scrollHeight")
     while True:
-        # scroll down to bottom
+        
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        # wait to load page
+        
         time.sleep(waiting_time)
-        # calculate new scroll height and compare with last scroll height
+        
         new_height = driver.execute_script("return document.body.scrollHeight")
         if new_height == last_height:
             break
