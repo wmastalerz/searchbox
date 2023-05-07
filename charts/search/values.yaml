@@ -15,10 +15,10 @@ podAnnotations: {}
 podSecurityContext: {}
 securityContext: {}
 service:
-  type: LoadBalancer
+  type: ClusterIP
   port: 8501
 ingress:
-  enabled: falses
+  enabled: false
   cslassName: ""
   annotations: {}
   hosts:
@@ -36,4 +36,4 @@ autoscaling:
 nodeSelector: {}
 tolerations: []
 affinity: {}
-elasticsearch: "doc-docs"
+elasticsearch: "d-elasticsearch"

@@ -66,7 +66,7 @@ def index_search(es, index: str, keywords: str, filters: str, from_i: int,
             "tags": {
                 "terms": {"field": "tags"}
             },
-            "match_count": {"value_count": {"field": "_name"}}
+            "match_count": {"value_count": {"field": "_index"}}
         }
     }
     if filters is not None:
