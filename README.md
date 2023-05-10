@@ -16,16 +16,18 @@ Before getting started, let's build the docker container of this app
 ```
 docker build -t searchbox .
 ```
-Then use docker compose (contain its own elasticsearch manifest):
+Then use local docker-compose (contain its own elasticsearch manifest):
 ```
 source env/bin/activate
 docker-compose up
 # the webapp should be available in localhost:8501
 ```
-Or on Kubernetes (used exitsitng elasticsearch):
+
+Or deploy on Kubernetes (used exitsitng elasticsearch):
 ```
-# push image to local registry
+# push image to local current registry
 docker tag searchbox localhost:8282/searchbox && docker push localhost:8282/searchbox
+
 # deploy searchbox-app (values.elasticsearch -> name of current elasticsearch service)
 helm install docs charts/searchbox
 ```
