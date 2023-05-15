@@ -36,9 +36,7 @@ def info_add_story() -> str:
                     URL - either medium story URL or medium list URL.
                 </li>
                 <li>
-                    JSON - content of one or more medium stories. 
-                    Example file can be found at 
-                    <a href="https://github.com/chiachong/search-box-app/blob/main/data/example.json">here</a>.
+                    FILE - content of one or more files. 
                 </li>
             </ul>
         </div>

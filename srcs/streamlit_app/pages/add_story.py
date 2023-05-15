@@ -21,19 +21,10 @@ def app():
         url_type = st.radio('Url type:', ['story', 'list'])
         add_story_url = st.button('Add', 'submit_add_story_url')
 
-    with st.expander('By JSON'):
-        st.write('JSON file containing one or more stories with format:')
-        st.write({
-            '$STORY_URL': {
-                'author': '$AUTHOR_NAME',
-                'length': '$INT min read',
-                'title': '$STORY_TITLE',
-                'tags': ['$TAG-NAME', ],
-                'content': ['$PARAGRAPH_TEXT', ]
-            },
-        })
-        json_file = st.file_uploader('Upload a .json file', ['json'])
-        add_story_json = st.button('Add', 'submit_add_story_json')
+    with st.expander('By docx, pdf, xlsx, pptx'):
+        st.write('File containing stories')
+        raw_file = st.file_uploader('Upload a .docx, .pdf, .xlsx, .pptx file', ['docx', 'pdf', 'xlsx', 'pptx'])
+        add_story_raw = st.button('Add', 'submit_add_raw_file')
 
     if add_story_url:
         stories = {}
@@ -52,8 +43,8 @@ def app():
         
         utils.index_stories(es, index, stories)
 
-    if json_file is not None and add_story_json:
-        data = json_file.read()
+    if raw_file is not None and add_story_raw:
+        data = raw_file.read()
         stories = json.loads(data)
         
         utils.index_stories(es, index, stories)
