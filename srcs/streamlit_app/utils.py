@@ -9,13 +9,31 @@ import medium
 def check_and_create_index(es, index: str):
     """ checks if index exits and loads the data accordingly """
     mappings = {
-        'mappings': {
+            'mappings': {
+                '_source': {
+                    'enabled': 'false'
+                },
             'properties': {
-                'author': {'type': 'keyword'},
-                'length': {'type': 'keyword'},
-                'title': {'type': 'text'},
-                'tags': {'type': 'keyword'},
-                'content': {'type': 'text'},
+                'author': {
+                    'type': 'keyword',
+                    'store': 'false'
+                },
+                'length': {
+                    'type': 'keyword',
+                    'store': 'false'
+                },
+                'title': {
+                    'type': 'text',
+                    'store': 'false'
+                },
+                'tags': {
+                    'type': 'keyword',
+                    'store': 'false'
+                },
+                'content': {
+                    'type': 'text',
+                    'store': 'false'
+                },
             }
         }
     }
@@ -116,7 +134,13 @@ def shorten_title(title: str, limit: int = 65) -> str:
 @st.cache_data(show_spinner=False)
 def simplify_es_result(result: dict) -> dict:
     """ """
-    res = result['_source']
+    res = {
+        "url": "",
+        "_index": "",
+        "_id": "",
+        "highlights": "",
+        "title": ""       
+    }
     res['url'] = result['_id']
     # join list of highlights into a sentence
     res['highlights'] = '...'.join(result['highlight']['content'])
