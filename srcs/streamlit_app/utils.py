@@ -136,8 +136,6 @@ def simplify_es_result(result: dict) -> dict:
     """ """
     res = {
         "url": "",
-        "_index": "",
-        "_id": "",
         "highlights": "",
         "title": ""       
     }
