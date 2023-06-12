@@ -13,28 +13,26 @@ def check_and_create_index(es, index: str):
                 '_source': {
                     'enabled': 'false'
                 },
+                '_meta': {
+                    'enabled': 'true'
+                },
             'properties': {
-                'author': {
-                    'type': 'keyword',
-                    'store': 'false'
-                },
-                'length': {
-                    'type': 'keyword',
-                    'store': 'false'
-                },
-                'title': {
-                    'type': 'text',
-                    'store': 'false'
-                },
-                'tags': {
-                    'type': 'keyword',
-                    'store': 'false'
-                },
-                'content': {
-                    'type': 'text',
-                    'store': 'false'
-                },
-            }
+                    'author': {
+                        'type': 'keyword'
+                    },
+                    'length': {
+                        'type': 'keyword'
+                    },
+                    'title': {
+                        'type': 'text'
+                    },
+                    'tags': {
+                        'type': 'keyword'
+                    },
+                    'content': {
+                        'type': 'text'
+                    }
+                }    
         }
     }
     if not safe_check_index(es, index):

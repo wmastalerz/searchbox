@@ -3,4 +3,12 @@ source env/bin/activate
 pip3 install --upgrade pip setuptools
 pip3 install -r requirements.txt
 esapp=$(helm ls |grep elasticsearch | cut -d " " -f1)
-export ESHOME=$(kubectl get svc -l app.kubernetes.io/component=coordinating-only,app.kubernetes.io/instance=${esapp},app.kubernetes.io/name=elasticsearch --no-headers | head -n1 | awk '{print $4;}')
+ESHOME=$(kubectl get svc -l app.kubernetes.io/component=coordinating-only,app.kubernetes.io/instance=${esapp},app.kubernetes.io/name=elasticsearch --no-headers | head -n1 | awk '{print $4;}')
+if [ $ESHOME="<none>" ]; then
+   kubectl port-forward svc/${esapp}-elasticsearch 9200:9200 &
+   ESHOME="localhost"
+else
+   echo "PLS check cluster ...."
+fi
+export $ESHOME
+
