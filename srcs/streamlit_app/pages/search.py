@@ -4,15 +4,31 @@ import streamlit as st
 from elasticsearch import Elasticsearch
 sys.path.append('srcs')
 from streamlit_app import utils, templates
-
+from ssl import create_default_context, CERT_NONE
+from dotenv import load_dotenv
 
 def app():
     """ search layout """
-    # load css
+    load_dotenv()
     index = os.environ['INDEX']
-    page_size = int(os.environ['PAGE_SIZE'])
-    domain = os.environ['DOMAIN']
-    es = Elasticsearch(host=domain)
+    PAGE_SIZE = os.environ['PAGE_SIZE']
+    DOMAIN = os.environ['ESHOME']
+    PORT = os.environ['PORT']
+    DRIVER = os.environ['DRIVER']
+    username = os.environ['username']
+    password = os.environ['password']
+    ca_cert = os.environ['ca_cert'] 
+    page_size = os.environ['PAGE_SIZE']
+    context = create_default_context()
+    context.check_hostname = False    #auth workaround
+    context.verify_mode = CERT_NONE   #auth workaround
+
+    es = Elasticsearch(
+        hosts=[{'host': DOMAIN, 'port': PORT}],
+        http_auth=(username, password),
+        scheme='https',
+        ssl_context=context
+    )
     st.title('Search Resources')
     if st.session_state.search is None:
         search = st.text_input('Enter search words:')

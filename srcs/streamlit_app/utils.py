@@ -86,7 +86,6 @@ def index_search(es, index: str, keywords: str, filters: str, from_i: int,
                 "tags": [filters]
             }
         }
-
     res = es.search(index=index, body=body)
     print(str(res))
     # sort popular tags
@@ -121,7 +120,6 @@ def shorten_title(title: str, limit: int = 65) -> str:
     """ Shorten the title of a story. """
     if len(title) > limit:
         title = title[:limit] + '...'
-
     return title
 
 

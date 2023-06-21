@@ -4,3 +4,4 @@ elasticsearch==7.14.1
 selenium==3.141.0
 streamlit==1.22.0
 protobuf==3.20.3
+python-dotenv

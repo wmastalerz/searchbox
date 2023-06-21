@@ -6,21 +6,22 @@ from elasticsearch import Elasticsearch
 sys.path.append('srcs')
 from streamlit_app import utils, templates
 from streamlit_app.pages import add_story, search
-from ssl import create_default_context
-import ssl
+from ssl import create_default_context, CERT_NONE
+from dotenv import load_dotenv
 
-INDEX = 'docs_data'
-PAGE_SIZE = 5
+load_dotenv()
+INDEX = os.environ['INDEX']
+PAGE_SIZE = os.environ['PAGE_SIZE']
 DOMAIN = os.environ['ESHOME']
-PORT = 9200
-DRIVER = '/usr/local/bin/chromedriver'
-username = 'elastic'
-password = 'es'
-ca_cert = '/path/to/ca_certificate.pem' 
+PORT = os.environ['PORT']
+DRIVER = os.environ['DRIVER']
+username = os.environ['username']
+password = os.environ['password']
+ca_cert = os.environ['ca_cert'] 
 
 context = create_default_context()
 context.check_hostname = False        #temp workaround
-context.verify_mode = ssl.CERT_NONE   #temp workaround
+context.verify_mode = CERT_NONE   #temp workaround
 
 es = Elasticsearch(
     hosts=[{'host': DOMAIN, 'port': PORT}],
