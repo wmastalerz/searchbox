@@ -6,14 +6,29 @@ from elasticsearch import Elasticsearch
 sys.path.append('srcs')
 from streamlit_app import utils, templates
 from streamlit_app.pages import add_story, search
+from ssl import create_default_context
+import ssl
 
 INDEX = 'docs_data'
 PAGE_SIZE = 5
 DOMAIN = os.environ['ESHOME']
 PORT = 9200
 DRIVER = '/usr/local/bin/chromedriver'
+username = 'elastic'
+password = 'es'
+ca_cert = '/path/to/ca_certificate.pem' 
 
-es = Elasticsearch(host=DOMAIN)
+context = create_default_context()
+context.check_hostname = False        #temp workaround
+context.verify_mode = ssl.CERT_NONE   #temp workaround
+
+es = Elasticsearch(
+    hosts=[{'host': DOMAIN, 'port': PORT}],
+    http_auth=(username, password),
+    scheme='https',
+    ssl_context=context
+)
+
 utils.check_and_create_index(es, INDEX)
 
 os.environ['INDEX'] = INDEX
