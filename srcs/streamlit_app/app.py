@@ -10,6 +10,7 @@ from ssl import create_default_context, CERT_NONE
 from dotenv import load_dotenv
 
 load_dotenv()
+print(os.environ)
 INDEX = os.environ['INDEX']
 PAGE_SIZE = os.environ['PAGE_SIZE']
 DOMAIN = os.environ['ESHOME']

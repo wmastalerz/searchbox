@@ -1,16 +1,16 @@
+#!/bin/bash
 python3 -m venv env
 source env/bin/activate
 pip3 install --upgrade pip setuptools
 pip3 install -r requirements.txt
-esapp=$(helm ls |grep elasticsearch | cut -d " " -f1)
-ES=$(kubectl get svc -l app.kubernetes.io/component=coordinating-only,app.kubernetes.io/instance=${esapp},app.kubernetes.io/name=elasticsearch --no-headers | head -n1 | awk '{print $4;}' || true)
-if [ "$ES"=="<none>" ]; then
+ES=$(kubectl get svc --no-headers |grep LoadBalancer |grep 9200 | head -n1 | awk '{print $4;}' || true)
+echo $ES
+if [[ "$ES" == *"<none>"* ]]; then
    pkill -9 -f port-forward 
    sleep 1
+   echo "PLS provide elasticsearch 9200 port-forward to localhost"
    #kubectl port-forward svc/${esapp}-elasticsearch 9200:9200 > /dev/null &
    ES="127.0.0.1"
-else
-   echo "PLS check cluster ...."
 fi
 export ESHOME=$ES
 

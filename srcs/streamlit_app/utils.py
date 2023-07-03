@@ -89,9 +89,9 @@ def index_search(es, index: str, keywords: str, filters: str, from_i: int,
     res = es.search(index=index, body=body)
     print(str(res))
     # sort popular tags
-    sorted_tags = res['aggregations']['tags']['buckets']
-    sorted_tags = sorted(sorted_tags, key=lambda t: t['doc_count'], reverse=True)
-    res['sorted_tags'] = [t['key'] for t in sorted_tags]
+    #sorted_tags = res['aggregations']['tags']['buckets']
+    #sorted_tags = sorted(sorted_tags, key=lambda t: t['doc_count'], reverse=True)
+    #res['sorted_tags'] = [t['key'] for t in sorted_tags]
     return res
 
 
