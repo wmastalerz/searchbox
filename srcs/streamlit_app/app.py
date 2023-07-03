@@ -10,7 +10,6 @@ from ssl import create_default_context, CERT_NONE
 from dotenv import load_dotenv
 
 load_dotenv()
-print(os.environ)
 INDEX = os.environ['INDEX']
 PAGE_SIZE = os.environ['PAGE_SIZE']
 DOMAIN = os.environ['ESHOME']
@@ -32,12 +31,6 @@ es = Elasticsearch(
 )
 
 utils.check_and_create_index(es, INDEX)
-
-os.environ['INDEX'] = INDEX
-os.environ['PAGE_SIZE'] = str(PAGE_SIZE)
-os.environ['DOMAIN'] = DOMAIN
-os.environ['DRIVER'] = DRIVER
-
 
 def set_session_state():
     """ """

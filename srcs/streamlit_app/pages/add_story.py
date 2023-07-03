@@ -12,13 +12,11 @@ def app():
     """ page for adding document """
     load_dotenv()
     index = os.environ['INDEX']
-    PAGE_SIZE = os.environ['PAGE_SIZE']
     DOMAIN = os.environ['ESHOME']
     PORT = os.environ['PORT']
-    DRIVER = os.environ['DRIVER']
+    driver = os.environ['DRIVER']
     username = os.environ['username']
     password = os.environ['password']
-    ca_cert = os.environ['ca_cert'] 
 
     context = create_default_context()
     context.check_hostname = False    #temp workaround
